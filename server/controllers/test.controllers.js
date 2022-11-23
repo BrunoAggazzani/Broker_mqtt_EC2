@@ -21,10 +21,13 @@ export const showing = async(req, res) => {
     .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
     .render('home.ejs', {datos: dataShowing});
     */
-   let info = JSON.stringify(dataShowing);
-   res
-   .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-   .send().json(info);
+
+    /*
+    let info = JSON.stringify(dataShowing);
+    res
+    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+    .send().json(info);
+    */
 };
 
 
@@ -52,11 +55,7 @@ export const publish = (req, res, dataShowing) => {
             console.log('Pidiendo datos a balanza: '+balanza);
             pub.publish(`balanza/${balanza}/nombre`, data);        
         });
-    }
-    
-    
-        
-    
+    }    
 };
 
 
