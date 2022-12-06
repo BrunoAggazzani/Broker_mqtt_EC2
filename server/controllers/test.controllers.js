@@ -1,46 +1,62 @@
+/*
+import app from '../app.js';
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
 const mqtt = require('mqtt');
 
-let dataShowing = {mje: ''};
-
-export const showing = async(req, res) => {
-    //console.log('Una balanza se ha conectado');
-    dataShowing = {mje: 'Balanza dijo: Hola, soy '+req.body.mje.toString()};
-    console.log(dataShowing.mje);
-    /*
-    if (dataShowing.mje != '') {
-        res
-        .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-        .render('home.ejs', {datos: dataShowing});
-    }
-    */
-    
-    /*
-    let datos = JSON.parse(data);
-    res.json(datos);
-    
-    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-    .render('home.ejs', {datos: dataShowing});
-    */
-
-    /*
-    let info = JSON.stringify(dataShowing);
-    res
-    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-    .send().json(info);
-    */
-};
-
-
-
+let arrayClients = [];
 export const launchPage = (req, res) => {
-    res
-    .set("Content-Security-Policy", "script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
-    .render('home.ejs');
+
+      
+    io.on("connection", function (socket) {
+      console.log("Balanza se ha conectado con Sockets");
+      //socket.emit("messages", messages);
+      socket.on("new-message", function (data) {
+        console.log(data);
+        console.log('Respondiendo a Balanza...');
+        let messages = 'Cloud dice: Hola Cuora Neo!';
+        io.sockets.emit("messages", messages);
+      });
+    });
+    
+
+    const mosca = require('mosca');
+
+    const broker = new mosca.Server({
+        port: 9000,
+        retain: false
+    });
+
+    broker.on('ready', () => {
+        console.log('Broker está listo!');
+    });
+    
+    broker.on('clientConnected', (client) => {
+        console.log('Nueva balanza conectada con ID: ' + client.id);
+        arrayClients.push(client.id);
+        //aca va socket        
+    });
+
+    broker.on('clientDisconnected', (client) => {
+        console.log('Se desconectó la balanza con ID: ' + client.id);
+        let cliente = client.id;
+        arrayClients = arrayClients.filter((item) => item != cliente);
+        //aca va socket        
+    });
+    setInterval(() => {//esto vuela. 
+        console.log(arrayClients.length);
+        if (arrayClients.length > 0) {
+            arrayClients.map((e) =>{
+                console.log(e);
+            });
+        }
+    }, 5000);    
+     
 };
 
 
 
-export const publish = (req, res, dataShowing) => {
+export const publish = (req, res) => {
     if (req.body){
         const data = req.body.data.toString();
         const balanza = req.body.balanza.toString();
@@ -57,7 +73,7 @@ export const publish = (req, res, dataShowing) => {
         });
     }    
 };
-
+*/
 
     
 

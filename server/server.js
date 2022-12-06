@@ -1,35 +1,74 @@
 import app from './app.js';
 //const server = require("http").Server(app);
 //const io = require("socket.io")(server);
+//const mqtt = require('mqtt');
 
 // Puerto de escucha servidor
 let port = 24173 || process.env.PORT;
 app.listen(port, () => {
     console.log("server is running in port " + port);
 });
-/*  
+/*
+let arrayClients = [];
+let filter = [];
+      
 io.on("connection", function (socket) {
-  console.log("Balanza se ha conectado con Sockets");
-  //socket.emit("messages", messages);
-  socket.on("new-message", function (data) {
-    console.log(data);
-    console.log('Respondiendo a Balanza...');
-    let messages = 'Cloud dice: Hola Cuora Neo!';
-    io.sockets.emit("messages", messages);
+  console.log("Un cliente se ha conectado por websocket");
+  let arrayClientsFiltered = [];
+  socket.on('filtereds', (filtro) => {
+    filter = filtro;
+    console.log('Filtro recibido!');
+    console.log('filter connection: ' +JSON.stringify(filter));    
+    arrayClientsFiltered = arrayClients.filter((item) => item.firma == filter[0] && item.sucursal == filter[1] /* && item.department == filter[2]);
+    //console.log('arrayClients connection: '+JSON.stringify(arrayClientsFiltered));
+    setTimeout(() => {
+      io.sockets.emit("conectedScales", arrayClientsFiltered);
+    }, 500);    
   });
 });
-*/
-const mosca = require('mosca');
+*/    
 
+const mosca = require('mosca')
 const broker = new mosca.Server({
     port: 9000,
     retain: false
-});
-
+})
 broker.on('ready', () => {
     console.log('Broker está listo!');
 });
-
+/*
 broker.on('clientConnected', (client) => {
-    //console.log('Nueva balanza: ' + client.id);
+    //let dataClient = JSON.parse(client);
+    //let nombre = dataClient[0].id.name;
+    //let arrayClientsFiltered = [];
+    console.log('Nueva balanza conectada ');
+    
+    arrayClients.push(dataClient);
+    if (filter.length > 0) {
+      //console.log('filter clientConnected: '+JSON.stringify(filter));
+      arrayClientsFiltered = arrayClients.filter((item) => item.firma == filter[0] && item.sucursal == filter[1] /* && item.department == filter[2]);      //console.log('Array clientConnected: '+JSON.stringify(arrayClients));
+      setTimeout(() => {
+        io.sockets.emit("conectedScales", arrayClientsFiltered);
+      }, 500);
+    }
+                 
 });
+*/
+/*
+broker.on('clientDisconnected', (client) => { 
+//    let dataClient = JSON.parse(client.id);
+    console.log('Se desconectó una balanza');
+    
+    let clientDisconnect = dataClient.name;
+    let arrayClientsFiltered = [];
+    arrayClients = arrayClients.filter((item) => item.name != clientDisconnect);
+    if (filter.length > 0) {
+      //console.log('filter clientDisconnected: '+JSON.stringify(filter));
+      arrayClientsFiltered = arrayClients.filter((item) => item.firma == filter[0] && item.sucursal == filter[1] /* && item.department == filter[2]);      //console.log('Array clientDisconnected: '+JSON.stringify(arrayClients));
+      setTimeout(() => {
+        io.sockets.emit("conectedScales", arrayClientsFiltered);
+      }, 500);
+    }
+                
+});
+*/

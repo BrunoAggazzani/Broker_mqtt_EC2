@@ -6,7 +6,7 @@ import i18n from './i18n';
 import helmet from "helmet";
 import compression from "compression";
 // import rutas
-import testRoutes from './routes/test.routes';
+//import testRoutes from './routes/test.routes';
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(helmet());
 app.use(compression());
 
 // rutas principales
-app.use('/', testRoutes);
+//app.use('/', testRoutes);
 
 
 export default app;
