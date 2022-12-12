@@ -4,7 +4,7 @@ import app from './app.js';
 const mqtt = require('mqtt');
 
 // Puerto de escucha servidor
-let port = 24173 || process.env.PORT;
+let port = 24177 || process.env.PORT;
 app.listen(port, () => {
     console.log("server is running in port " + port);
 });
