@@ -1,7 +1,7 @@
 import app from './app.js';
 //const server = require("http").Server(app);
 //const io = require("socket.io")(server);
-//const mqtt = require('mqtt');
+const mqtt = require('mqtt');
 
 // Puerto de escucha servidor
 let port = 24173 || process.env.PORT;
@@ -36,6 +36,9 @@ const broker = new mosca.Server({
 broker.on('ready', () => {
     console.log('Broker está listo!');
 });
+
+const clientMQTT = mqtt.connect('mqtt://localhost:9000');
+
 /*
 broker.on('clientConnected', (client) => {
     //let dataClient = JSON.parse(client);
@@ -54,6 +57,10 @@ broker.on('clientConnected', (client) => {
                  
 });
 */
+broker.on('clientConnected', (client) => {
+  console.log(`clientConnected: ${client.id}`);
+  clientMQTT.publish(`mqtt/demo/connected/res`, `${client.id}`, {qos: 1, retain: true});                   
+});
 /*
 broker.on('clientDisconnected', (client) => { 
 //    let dataClient = JSON.parse(client.id);
@@ -72,3 +79,7 @@ broker.on('clientDisconnected', (client) => {
                 
 });
 */
+broker.on('clientDisconnected', (client) => {
+  console.log(`clientDisconnected: ${client.id}`);
+  clientMQTT.publish(`mqtt/demo/disconnected/res`, `${client.id}`, {qos: 1, retain: true});                   
+});
