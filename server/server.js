@@ -4,7 +4,7 @@ import app from './app.js';
 const mqtt = require('mqtt');
 
 // Puerto de escucha servidor
-let port = 24177 || process.env.PORT;
+let port = 24173 || process.env.PORT;
 app.listen(port, () => {
     console.log("server is running in port " + port);
 });
@@ -30,7 +30,7 @@ io.on("connection", function (socket) {
 
 const mosca = require('mosca')
 const broker = new mosca.Server({
-    port: 9001,
+    port: 9000,
     retain: false
 })
 broker.on('ready', () => {
