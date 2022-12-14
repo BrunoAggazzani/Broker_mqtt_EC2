@@ -53,7 +53,7 @@ const opts = {
     protocolVersion: 4
 };
 
-const clientMQTT = mqtt.connect('mqtt://localhost:9000', opts);
+const clientMQTT = mqtt.connect('mqtt://localhost:9000');
 
 /*
 broker.on('clientConnected', (client) => {
@@ -74,7 +74,12 @@ broker.on('clientConnected', (client) => {
 });
 */
 broker.on('clientConnected', (client) => {
-  console.log('clientConnected: '+JSON.parse(client.id).name);
+  let Client = client.id.split('{');
+  if (Client.length > 1) {
+    console.log('clientConnected: '+JSON.parse(client.id).name);
+  } else {
+    console.log('clientConnected: '+client.id);
+  }  
   clientMQTT.publish(`mqtt/demo/connected/res`, `${client.id}`, {qos: 1, retain: true});                    
 });
 /*
@@ -96,6 +101,11 @@ broker.on('clientDisconnected', (client) => {
 });
 */
 broker.on('clientDisconnected', (client) => {
-  console.log('clientDisconnected: '+JSON.parse(client.id).name);
+  let Client = client.id.split(',');
+  if (Client.length > 1) {
+    console.log('clientDisconnected: '+JSON.parse(client.id).name);
+  } else {
+    console.log('clientDisconnected: '+client.id);
+  }
   clientMQTT.publish(`mqtt/demo/disconnected/res`, `${client.id}`, {qos: 1, retain: true});                   
 });
