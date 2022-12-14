@@ -37,7 +37,23 @@ broker.on('ready', () => {
     console.log('Broker está listo!');
 });
 
-const clientMQTT = mqtt.connect('mqtt://localhost:9000');
+
+let id = {
+    firma: 'firma',
+    sucursal: 'sucursal',
+    department: 'depto',
+    name: 'brokerMQTT',
+    wildcard: 'wilcard'
+};
+
+const opts = {
+    clientId: JSON.stringify(id),
+    clean: false,
+    protocolId: 'MQTT',
+    protocolVersion: 4
+};
+
+const clientMQTT = mqtt.connect('mqtt://localhost:9000', opts);
 
 /*
 broker.on('clientConnected', (client) => {
@@ -58,8 +74,8 @@ broker.on('clientConnected', (client) => {
 });
 */
 broker.on('clientConnected', (client) => {
-  console.log(`clientConnected: ${client.id}`);
-  clientMQTT.publish(`mqtt/demo/connected/res`, `${client.id}`, {qos: 1, retain: true});                   
+  console.log('clientConnected: '+JSON.parse(client.id).name);
+  clientMQTT.publish(`mqtt/demo/connected/res`, `${client.id}`, {qos: 1, retain: true});                    
 });
 /*
 broker.on('clientDisconnected', (client) => { 
@@ -80,6 +96,6 @@ broker.on('clientDisconnected', (client) => {
 });
 */
 broker.on('clientDisconnected', (client) => {
-  console.log(`clientDisconnected: ${client.id}`);
+  console.log('clientDisconnected: '+JSON.parse(client.id).name);
   clientMQTT.publish(`mqtt/demo/disconnected/res`, `${client.id}`, {qos: 1, retain: true});                   
 });
