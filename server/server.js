@@ -101,7 +101,7 @@ broker.on('clientDisconnected', (client) => {
 });
 */
 broker.on('clientDisconnected', (client) => {
-  let Client = client.id.split(',');
+  let Client = client.id.split('{');
   if (Client.length > 1) {
     console.log('clientDisconnected: '+JSON.parse(client.id).name);
   } else {
